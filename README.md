@@ -118,6 +118,12 @@ Loan_Data.csv
       |
       v
  Courbes ROC comparatives
+      |
+      v
+ Optimisation du seuil de classification
+   -> Courbes Precision-Recall vs Seuil (par modele, sans/avec SMOTE)
+   -> Seuil optimal maximisant le F1-score
+   -> Comparaison matrice de confusion seuil 0.5 vs seuil optimal
 ```
 
 ---
@@ -168,6 +174,7 @@ La version MLF0 du notebook integre MLflow pour tracer automatiquement chaque en
 | Learning_Curves | - | Graphique learning curves |
 | SMOTE_Comparison_ConfusionMatrix | - | Matrices de confusion comparatives |
 | ROC_Curves_Comparison | - | Courbes ROC sans/avec SMOTE |
+| Threshold_Optimization | - | Seuil optimal, metriques recalculees, graphique comparatif |
 
 ### Metriques tracees par run
 
@@ -179,6 +186,8 @@ La version MLF0 du notebook integre MLflow pour tracer automatiquement chaque en
 | `test_auc_roc` | Aire sous la courbe ROC |
 | `gap_accuracy`, `gap_recall` | Ecarts train/test (indicateurs d'overfitting) |
 | `delta_*` (runs SMOTE) | Ecart de performance avec/sans SMOTE |
+| `optimal_threshold` | Seuil de classification optimal (maximise le F1) |
+| `threshold_recall`, `threshold_precision`, `threshold_f1` | Metriques recalculees au seuil optimal |
 
 ### Visualisation des resultats
 
@@ -190,6 +199,21 @@ mlflow ui
 Ouvrir **http://localhost:5000** dans le navigateur.
 
 Pour plus de details, consulter le fichier `GUIDE_MLFLOW.md`.
+
+---
+
+## Optimisation du Seuil de Classification
+
+Par defaut, `predict()` utilise un seuil de 0.5 : si la probabilite predite de defaut est >= 0.5, le modele predit un defaut. Pour un dataset desequilibre (18.5% de defauts), ce seuil n'est pas optimal.
+
+La derniere cellule du notebook realise :
+
+1. **Courbes Precision-Recall vs Seuil** pour chaque modele (sans et avec SMOTE), permettant de visualiser comment precision et recall evoluent quand on fait varier le seuil de 0 a 1
+2. **Courbes Precision vs Recall** avec une etoile au point ou le F1-score est maximal
+3. **Tableau recapitulatif** du seuil optimal, de la precision, du recall et du F1 pour chaque modele
+4. **Comparaison visuelle** : matrice de confusion avec seuil 0.5 vs seuil optimal sur le meilleur modele
+
+Un seuil plus bas que 0.5 augmente le recall (davantage de defauts detectes) au prix d'une baisse de precision (plus de faux positifs). Le seuil optimal F1 offre le meilleur compromis entre les deux.
 
 ---
 

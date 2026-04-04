@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prédiction de défaut de crédit</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <div class="card">
+            <h1>Prédiction de défaut de crédit</h1>
+            <p class="subtitle">
+                Application MLOps de scoring du risque de défaut.
+            </p>
+
+            <form action="/predict" method="post" class="form-grid">
+                <div class="form-group">
+                    <label for="loan_amt_outstanding">Montant du prêt restant dû</label>
+                    <input type="number" step="any" name="loan_amt_outstanding" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="income">Revenu annuel</label>
+                    <input type="number" step="any" name="income" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="years_employed">Années d'emploi</label>
+                    <input type="number" step="any" name="years_employed" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="fico_score">Score FICO</label>
+                    <input type="number" step="any" name="fico_score" required>
+                </div>
+
+                <button type="submit" class="btn">Prédire le risque</button>
+            </form>
+        </div>
+    </div>
+</body>
+</html>

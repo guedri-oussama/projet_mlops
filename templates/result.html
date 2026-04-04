@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Résultat de prédiction</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <div class="card">
+            <h1>Résultat de la prédiction</h1>
+
+            {% if error %}
+                <div class="result-box error">
+                    <p><strong>Erreur :</strong> {{ error }}</p>
+                </div>
+            {% else %}
+                <div class="result-box {{ decision_class }}">
+                    <p class="decision">{{ decision_label }}</p>
+                    <p>Probabilité de défaut : <strong>{{ probability_percent }} %</strong></p>
+                    <p>Seuil appliqué : <strong>{{ threshold_percent }} %</strong></p>
+                </div>
+
+                <div class="summary">
+                    <h2>Entrées fournies</h2>
+                    <ul>
+                        <li>Montant du prêt restant dû : {{ loan_amt_outstanding }}</li>
+                        <li>Revenu annuel : {{ income }}</li>
+                        <li>Années d'emploi : {{ years_employed }}</li>
+                        <li>Score FICO : {{ fico_score }}</li>
+                    </ul>
+                </div>
+            {% endif %}
+
+            <a href="/" class="btn secondary">Revenir au formulaire</a>
+        </div>
+    </div>
+</body>
+</html>

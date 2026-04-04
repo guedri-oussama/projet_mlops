@@ -1,0 +1,14 @@
+artifact_uri: file:c:/Users/hello/Documents/projet_mlops/mlruns/854934360393640578/81db43a110ec4cc483492d49fc0f117d/artifacts
+end_time: 1775332109225
+entry_point_name: ''
+experiment_id: '854934360393640578'
+lifecycle_stage: active
+run_id: 81db43a110ec4cc483492d49fc0f117d
+run_name: ROC_Curves_Comparison
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1775332109216
+status: 3
+tags: []
+user_id: hello

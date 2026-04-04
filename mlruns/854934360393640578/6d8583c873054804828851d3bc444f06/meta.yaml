@@ -1,0 +1,14 @@
+artifact_uri: file:c:/Users/hello/Documents/projet_mlops/mlruns/854934360393640578/6d8583c873054804828851d3bc444f06/artifacts
+end_time: 1775332110431
+entry_point_name: ''
+experiment_id: '854934360393640578'
+lifecycle_stage: active
+run_id: 6d8583c873054804828851d3bc444f06
+run_name: Avec SMOTE - Logistic Regression - seuil 0.4
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1775332110418
+status: 3
+tags: []
+user_id: hello

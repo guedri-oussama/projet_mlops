@@ -1,0 +1,14 @@
+artifact_uri: file:c:/Users/hello/Documents/projet_mlops/mlruns/854934360393640578/bff8fb8a9600480994f8d86726cd8263/artifacts
+end_time: 1775332092146
+entry_point_name: ''
+experiment_id: '854934360393640578'
+lifecycle_stage: active
+run_id: bff8fb8a9600480994f8d86726cd8263
+run_name: XGBoost_SMOTE
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1775332090476
+status: 3
+tags: []
+user_id: hello

@@ -1,0 +1,14 @@
+artifact_uri: file:c:/Users/hello/Documents/projet_mlops/mlruns/854934360393640578/31c3d421260c4833a318607889a7b679/artifacts
+end_time: 1775332109710
+entry_point_name: ''
+experiment_id: '854934360393640578'
+lifecycle_stage: active
+run_id: 31c3d421260c4833a318607889a7b679
+run_name: Threshold_Optimization
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1775332109685
+status: 3
+tags: []
+user_id: hello

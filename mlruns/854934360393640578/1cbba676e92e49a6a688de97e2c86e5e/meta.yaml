@@ -1,0 +1,14 @@
+artifact_uri: file:c:/Users/hello/Documents/projet_mlops/mlruns/854934360393640578/1cbba676e92e49a6a688de97e2c86e5e/artifacts
+end_time: 1775332110369
+entry_point_name: ''
+experiment_id: '854934360393640578'
+lifecycle_stage: active
+run_id: 1cbba676e92e49a6a688de97e2c86e5e
+run_name: Sans SMOTE - MLP Classifier - seuil 0.45
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1775332110355
+status: 3
+tags: []
+user_id: hello

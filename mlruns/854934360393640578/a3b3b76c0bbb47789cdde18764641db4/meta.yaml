@@ -1,0 +1,14 @@
+artifact_uri: file:c:/Users/hello/Documents/projet_mlops/mlruns/854934360393640578/a3b3b76c0bbb47789cdde18764641db4/artifacts
+end_time: 1775332110335
+entry_point_name: ''
+experiment_id: '854934360393640578'
+lifecycle_stage: active
+run_id: a3b3b76c0bbb47789cdde18764641db4
+run_name: Sans SMOTE - XGBoost - seuil 0.4
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1775332110320
+status: 3
+tags: []
+user_id: hello

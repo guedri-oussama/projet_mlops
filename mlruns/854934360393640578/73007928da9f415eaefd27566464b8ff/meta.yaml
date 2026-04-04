@@ -1,0 +1,14 @@
+artifact_uri: file:c:/Users/hello/Documents/projet_mlops/mlruns/854934360393640578/73007928da9f415eaefd27566464b8ff/artifacts
+end_time: 1775332084768
+entry_point_name: ''
+experiment_id: '854934360393640578'
+lifecycle_stage: active
+run_id: 73007928da9f415eaefd27566464b8ff
+run_name: Learning_Curves
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1775332084758
+status: 3
+tags: []
+user_id: hello

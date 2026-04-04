@@ -75,7 +75,7 @@ Notebook complet intégrant l'ensemble du pipeline de modélisation avec trackin
 | **8.** Analyse post-entraînement | Importance des variables, courbes d'apprentissage |
 | **9.** Test de robustesse avec SMOTE | Génération synthétique, ré-entraînement, comparaison, courbes ROC |
 | **10.** Optimisation du seuil de classification | Courbes Précision-Rappel, tableau des seuils, comparaison |
-| **11.** Test multi-seuils | Grille de seuils (0.50, 0.45, 0.40, 0.35) sur tous les modèles |
+| **11.** Test multi-seuils | Grille de seuils (0.45, 0.40, 0.35) sur tous les modèles |
 
 ---
 
@@ -139,7 +139,7 @@ Loan_Data.csv
    -> Comparaison matrice de confusion seuil 0.5 vs seuil optimal
       |
       v
- Test multi-seuils (0.50, 0.45, 0.40, 0.35)
+ Test multi-seuils (0.45, 0.40, 0.35)
    -> Tableau comparatif par modèle et par seuil
    -> Graphiques Recall et F1 vs Seuil
 ```
@@ -159,13 +159,26 @@ Loan_Data.csv
 
 ---
 
+## Stratégie de sélection
+
+Le projet utilise **deux critères distincts** à deux étapes différentes :
+
+| Étape | Critère | Objectif |
+|---|---|---|
+| **GridSearchCV** (choix des hyperparamètres) | **Recall** (`scoring="recall"`) | Sélectionner le modèle qui détecte le plus de défauts |
+| **Seuil optimal** (choix du seuil de décision) | **F1-score** (max) | Ajuster le compromis recall/précision après entraînement |
+
+Cette approche en deux temps est cohérente avec le contexte métier du risque de crédit : on veut d'abord un modèle **sensible** (recall élevé pour ne pas rater de défauts), puis on calibre le seuil pour limiter les faux positifs (F1 comme compromis).
+
+---
+
 ## Métriques d'évaluation
 
 | Métrique | Définition | Importance |
 |---|---|---|
-| **Recall** | TP / (TP + FN) | **Métrique principale** (détecter les défauts) |
+| **Recall** | TP / (TP + FN) | **Critère de sélection GridSearchCV** (détecter les défauts) |
+| F1-score | Moyenne harmonique P/R | **Critère d'optimisation du seuil** (compromis) |
 | Précision | TP / (TP + FP) | Limiter les faux positifs |
-| F1-score | Moyenne harmonique P/R | Compromis |
 | AUC-ROC | Aire sous la courbe ROC | Discrimination globale |
 | Accuracy | (TP + TN) / Total | Informative (trompeuse si déséquilibre) |
 
@@ -184,16 +197,16 @@ La version MLF0 du notebook intègre MLflow pour tracer automatiquement chaque e
 | Random Forest | false | Params + métriques + modèle + confusion matrix |
 | XGBoost | false | Params + métriques + modèle + confusion matrix |
 | MLP Classifier | false | Params + métriques + modèle + confusion matrix |
-| Logistic Regression_SMOTE | true | Params + métriques + modèle + deltas |
-| Random Forest_SMOTE | true | Params + métriques + modèle + deltas |
-| XGBoost_SMOTE | true | Params + métriques + modèle + deltas |
-| MLP Classifier_SMOTE | true | Params + métriques + modèle + deltas |
+| Logistic Regression_SMOTE | true | Params + métriques (train, test, gaps) + modèle + deltas |
+| Random Forest_SMOTE | true | Params + métriques (train, test, gaps) + modèle + deltas |
+| XGBoost_SMOTE | true | Params + métriques (train, test, gaps) + modèle + deltas |
+| MLP Classifier_SMOTE | true | Params + métriques (train, test, gaps) + modèle + deltas |
 | Feature_Importances | - | Graphique feature importance |
 | Learning_Curves | - | Graphique learning curves |
 | SMOTE_Comparison_ConfusionMatrix | - | Matrices de confusion comparatives |
 | ROC_Curves_Comparison | - | Courbes ROC sans/avec SMOTE |
 | Threshold_Optimization | - | Seuil optimal, métriques recalculées, graphique comparatif |
-| Multi_Threshold_Grid | - | Grille de seuils (0.50, 0.45, 0.40, 0.35), graphique comparatif |
+| Multi_Threshold_Grid | - | Run parent + 24 runs enfants (8 modèles × 3 seuils), graphique comparatif |
 
 ### Métriques tracées par run
 
@@ -203,10 +216,23 @@ La version MLF0 du notebook intègre MLflow pour tracer automatiquement chaque e
 | `train_accuracy`, `train_recall`, `train_f1` | Performance sur le jeu d'entraînement |
 | `test_accuracy`, `test_recall`, `test_f1`, `test_precision` | Performance sur le jeu de test |
 | `test_auc_roc` | Aire sous la courbe ROC |
-| `gap_accuracy`, `gap_recall` | Écarts train/test (indicateurs d'overfitting) |
+| `gap_accuracy`, `gap_recall` | Écarts train/test (indicateurs d'overfitting, sans ET avec SMOTE) |
 | `delta_*` (runs SMOTE) | Écart de performance avec/sans SMOTE |
 | `optimal_threshold` | Seuil de classification optimal (maximise le F1) |
 | `threshold_recall`, `threshold_precision`, `threshold_f1` | Métriques recalculées au seuil optimal |
+
+### Runs enfants multi-seuils
+
+Le run `Multi_Threshold_Grid` contient **24 runs enfants** (nested runs), un par combinaison modèle × seuil (le seuil 0.50 n'est pas dupliqué car il est déjà enregistré dans les 8 runs de modèles). Chaque run enfant enregistre :
+
+| Paramètre / Métrique | Description |
+|---|---|
+| `variante` | Sans SMOTE ou Avec SMOTE |
+| `modele` | Nom du modèle (Logistic Regression, Random Forest, XGBoost, MLP) |
+| `seuil` | Seuil de classification testé (0.45, 0.40, 0.35) |
+| `test_accuracy`, `test_recall`, `test_precision`, `test_f1` | Métriques au seuil donné |
+
+Dans MLflow UI, déplier le run parent `Multi_Threshold_Grid` pour accéder aux 32 combinaisons, les trier et les comparer.
 
 ### Visualisation des résultats
 
@@ -236,7 +262,12 @@ Le notebook calcule le seuil optimal maximisant le F1-score pour chaque modèle 
 
 ### Test multi-seuils
 
-La section 11 du notebook teste chaque modèle sur une grille de seuils prédéfinis (0.50, 0.45, 0.40, 0.35) et affiche un tableau comparatif des métriques (Accuracy, Recall, Précision, F1) pour chaque combinaison modèle × seuil.
+La section 11 du notebook teste chaque modèle (sans et avec SMOTE) sur une grille de seuils prédéfinis (0.45, 0.40, 0.35) et produit :
+
+1. **Tableaux comparatifs** des métriques (Accuracy, Recall, Précision, F1) pour chaque combinaison modèle × seuil
+2. **Graphiques** Recall vs Seuil et F1 vs Seuil pour chaque modèle
+3. **Tableau du meilleur seuil** par modèle (F1 max parmi les 4 seuils testés)
+4. **24 runs enfants MLflow** (8 modèles × 3 seuils) pour comparaison dans l'interface MLflow (le seuil 0.50 est déjà couvert par les runs de modèles)
 
 Un seuil plus bas que 0.5 augmente le recall (davantage de défauts détectés) au prix d'une baisse de précision (plus de faux positifs).
 

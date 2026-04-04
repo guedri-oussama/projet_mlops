@@ -326,6 +326,174 @@ pip install pandas numpy matplotlib seaborn scikit-learn xgboost imbalanced-lear
 
 ---
 
+
+## Mise en production du modèle
+
+À l'issue de l'entraînement dans le notebook, le modèle final retenu est exporté afin d'être utilisé dans une application.
+```python
+import joblib
+
+model_final = best_models_smote["Logistic Regression"]
+threshold_final = 0.852
+
+joblib.dump(model_final, "model.joblib")
+joblib.dump(threshold_final, "threshold.joblib")
+```
+
+### Fichiers générés
+
+| Fichier | Description |
+|---|---|
+| `model.joblib` | Pipeline complet entraîné (StandardScaler + modèle) |
+| `threshold.joblib` | Seuil optimal de classification |
+
+### Définitions
+
+- **Pipeline** : enchaînement des étapes de transformation et de modélisation (scaling + modèle)
+- **Seuil de décision (threshold)** : probabilité à partir de laquelle le modèle prédit un défaut
+
+---
+
+## Module de prédiction
+
+Un module Python dédié (`predict.py`) a été développé afin d'encapsuler la logique de prédiction.
+
+### Objectif
+
+Permettre l'utilisation du modèle en dehors du notebook, dans un contexte applicatif.
+
+### Fonction principale
+```python
+predict_default(
+    loan_amt_outstanding,
+    income,
+    years_employed,
+    fico_score
+)
+```
+
+### Variables d'entrée
+
+| Variable | Description |
+|---|---|
+| `loan_amt_outstanding` | Montant du prêt restant dû |
+| `income` | Revenu annuel |
+| `years_employed` | Ancienneté professionnelle |
+| `fico_score` | Score de solvabilité |
+
+### Fonctionnement
+
+Le module :
+
+1. charge le modèle et le seuil
+2. prépare les données d'entrée
+3. calcule la probabilité de défaut
+4. applique le seuil de décision
+5. retourne la prédiction et les métriques associées
+
+---
+
+## Application web
+
+Une application web a été développée avec **Flask** afin de rendre le modèle accessible via une interface utilisateur.
+
+### Fonctionnement
+
+1. saisie des données via un formulaire
+2. envoi des données au backend Flask
+3. appel du module de prédiction
+4. affichage du résultat (probabilité et décision)
+
+### Routes principales
+
+| Route | Description |
+|---|---|
+| `/` | Page d'accueil (formulaire) |
+| `/predict` | Traitement de la prédiction |
+
+---
+
+## Conteneurisation avec Docker
+
+### Objectif
+
+Garantir la reproductibilité et la portabilité de l'application en encapsulant l'ensemble du projet dans un conteneur.
+
+### Principe
+
+L'image Docker contient :
+
+- le code de l'application
+- le modèle entraîné
+- les dépendances Python
+- l'environnement d'exécution
+
+### Dockerfile
+```dockerfile
+FROM python:3.10-slim
+
+WORKDIR /app
+
+COPY requirements.txt .
+
+RUN pip install --no-cache-dir -r requirements.txt
+
+COPY . .
+
+EXPOSE 5000
+
+CMD ["python", "app.py"]
+```
+
+### Construction et exécution
+
+**Construction de l'image**
+```bash
+docker build -t mlops-credit-app .
+```
+
+**Lancement du conteneur**
+```bash
+docker run -p 5000:5000 mlops-credit-app
+```
+
+**Accès à l'application :**
+http://localhost:5000
+
+---
+
+## Reproductibilité
+
+L'utilisation de Docker permet à tout utilisateur de lancer l'application sans installer manuellement les dépendances.
+
+### Étapes
+```bash
+git clone https://github.com/guedri-oussama/projet_mlops.git
+cd projet_mlops
+git checkout feature/app-flask-docker
+
+docker build -t mlops-credit-app .
+docker run -p 5000:5000 mlops-credit-app
+```
+
+---
+
+## Intérêt MLOps
+
+Cette partie du projet illustre le passage :
+
+- d'un modèle expérimental (notebook)
+- à une application déployable
+
+La conteneurisation permet :
+
+- de standardiser l'environnement d'exécution
+- d'éviter les conflits de dépendances
+- de faciliter le déploiement sur des infrastructures cloud
+
+### Pipeline global
+Notebook → Modèle entraîné → Module de prédiction → Application Flask → Docker → Déploiement
+
 ## Auteur
 
 Projet réalisé dans le cadre du DU Data Analytics - PS1 (MLOps).

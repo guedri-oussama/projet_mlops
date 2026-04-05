@@ -41,7 +41,7 @@ ProjetMLOPS/
 |-- GUIDE_MLFLOW.md                    # Guide d'utilisation de MLflow
 |-- Rapport_Etonnement_MLOps.docx      # Rapport d'étonnement du projet
 |-- Loan_Data.csv                      # Jeu de données
-|-- projetmlops_MLF0.ipynb             # Notebook version MLflow (tracking des expériences)
+|-- projetmlops_MLFlow.ipynb             # Notebook version MLflow (tracking des expériences)
 |-- Projet_MLOPS.docx                  # Cahier des charges / énoncé
 |-- Guide_Explicatif_Notebook.docx     # Explication détaillée de chaque cellule
 |-- Schema_Traitements_Pipeline.docx   # Schémas du pipeline, GridSearchCV, SMOTE
@@ -52,9 +52,9 @@ ProjetMLOPS/
 
 ---
 
-## Notebook `projetmlops_MLF0.ipynb`
+## Notebook `projetmlops_MLFlow.ipynb`
 
-Notebook complet intégrant l'ensemble du pipeline de modélisation avec tracking MLflow. Chaque ajout MLflow est marqué par le commentaire `# [MLF0]`. Le notebook enregistre automatiquement :
+Notebook complet intégrant l'ensemble du pipeline de modélisation avec tracking MLflow. Chaque ajout MLflow est marqué par le commentaire `# [MLF0]` dans le code. Le notebook enregistre automatiquement :
 - Les hyperparamètres optimaux de chaque modèle
 - Les métriques de performance (train, test, validation croisée)
 - Les indicateurs d'overfitting (écarts train/test)
@@ -76,6 +76,7 @@ Notebook complet intégrant l'ensemble du pipeline de modélisation avec trackin
 | **9.** Test de robustesse avec SMOTE | Génération synthétique, ré-entraînement, comparaison, courbes ROC |
 | **10.** Optimisation du seuil de classification | Courbes Précision-Rappel, tableau des seuils, comparaison |
 | **11.** Test multi-seuils | Grille de seuils (0.45, 0.40, 0.35) sur tous les modèles |
+| **12.** Sauvegarde d'un modèle XGBoost personnalisé | Entraînement et enregistrement dans MLflow d'une configuration XGBoost hors GridSearchCV (`max_depth=3`, `n_estimators=10`, `scale_pos_weight=5.4`) — modèle retenu pour l'API FastAPI |
 
 ---
 
@@ -142,6 +143,12 @@ Loan_Data.csv
  Test multi-seuils (0.45, 0.40, 0.35)
    -> Tableau comparatif par modèle et par seuil
    -> Graphiques Recall et F1 vs Seuil
+      |
+      v
+ Sauvegarde XGBoost personnalisé (hors GridSearchCV)
+   -> max_depth=3, n_estimators=10, scale_pos_weight=5.4
+   -> Entraînement + log MLflow complet (params, métriques, modèle pickle)
+   -> Modèle retenu pour l'API FastAPI
 ```
 
 ---
@@ -187,7 +194,7 @@ Cette approche en deux temps est cohérente avec le contexte métier du risque d
 ## MLflow - Tracking des expériences
 
 ### Principe
-La version MLF0 du notebook intègre MLflow pour tracer automatiquement chaque entraînement. Aucun serveur distant n'est nécessaire : tout est stocké localement dans le dossier `mlruns/`.
+Le notebook `projetmlops_MLFlow.ipynb` intègre MLflow pour tracer automatiquement chaque entraînement. Aucun serveur distant n'est nécessaire : tout est stocké localement dans le dossier `mlruns/`.
 
 ### Runs enregistrés
 
@@ -207,6 +214,7 @@ La version MLF0 du notebook intègre MLflow pour tracer automatiquement chaque e
 | ROC_Curves_Comparison | - | Courbes ROC sans/avec SMOTE |
 | Threshold_Optimization | - | Seuil optimal, métriques recalculées, graphique comparatif |
 | Multi_Threshold_Grid | - | Run parent + 24 runs enfants (8 modèles × 3 seuils), graphique comparatif |
+| XGBoost_custom_d3_n10 | false | Modèle XGBoost personnalisé (section 12) retenu pour l'API FastAPI |
 
 ### Métriques tracées par run
 
@@ -273,23 +281,15 @@ Un seuil plus bas que 0.5 augmente le recall (davantage de défauts détectés) 
 
 ---
 
-## Problèmes identifiés et corrections
 
-### Data Leakage
-- `credit_lines_outstanding` encodait quasi-directement la cible (modalité 5 = 99.8% de défaut)
-- **Correction** : variable supprimée des features
 
-### Scaling prématuré
-- Le code original appliquait `StandardScaler` sur tout le dataset (y compris la cible) avant le split
-- **Correction** : scaling intégré dans le Pipeline (appliqué uniquement sur le train à chaque fold CV)
+
 
 ### Déséquilibre des classes
 - 81.5% non-défaut vs 18.5% défaut
 - **Correction** : SMOTE sur le train set + class_weight="balanced" + scale_pos_weight
 
-### Données synthétiques irréalistes
-- Le code original utilisait `make_classification` (données aléatoires sans lien avec les features réelles)
-- **Correction** : remplacement par SMOTE qui génère des échantillons par interpolation entre vrais voisins
+
 
 ### Compatibilité pandas 2.x / joblib
 - Depuis pandas 2.x, l'option `future.infer_string` peut activer le type `StringDtype` pour les noms de colonnes, incompatible avec la sérialisation joblib utilisée par `GridSearchCV(n_jobs=-1)`
@@ -319,7 +319,7 @@ pip install pandas numpy matplotlib seaborn scikit-learn xgboost imbalanced-lear
 
 ## Exécution
 
-1. Ouvrir `projetmlops_MLF0.ipynb` dans Jupyter Notebook ou JupyterLab
+1. Ouvrir `projetmlops_MLFlow.ipynb` dans Jupyter Notebook ou JupyterLab
 2. Exécuter toutes les cellules séquentiellement (Kernel > Restart & Run All)
 3. Les résultats s'affichent dans le notebook ET sont enregistrés dans `mlruns/`
 4. Lancer `mlflow ui` dans le terminal pour visualiser et comparer les runs

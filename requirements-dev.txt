@@ -1,0 +1,11 @@
+# Dépendances de développement et CI
+-r requirements.txt
+
+# Qualité code
+black>=24.0
+flake8>=6.0
+isort>=5.12
+
+# Tests
+pytest>=7.0
+httpx>=0.24

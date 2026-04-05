@@ -28,6 +28,6 @@ jobs:
           ECR_REPOSITORY: projet-mlops-bank
           IMAGE_TAG: latest
         run: |
-          # Ici le robot utilise le Dockerfile de tes collègues que tu viens de "pull"
+          # Ici le robot utilise  le Dockerfile de tes collègues que tu viens de "pull"
           docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG

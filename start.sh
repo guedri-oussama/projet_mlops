@@ -36,12 +36,14 @@ for i in {1..30}; do
     sleep 1
 done
 
-# 3. Démarrage de Streamlit en premier plan
+# 3. Démarrage de Streamlit avec les correctifs de sécurité Cloud
 echo "[start.sh] Démarrage de Streamlit sur le port 8501..."
 streamlit run app/streamlit_app.py \
     --server.port 8501 \
     --server.address 0.0.0.0 \
     --server.headless true \
+    --server.enableCORS false \
+    --server.enableXsrfProtection false \
     --browser.gatherUsageStats false &
 STREAMLIT_PID=$!
 

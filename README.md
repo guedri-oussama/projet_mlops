@@ -2,10 +2,20 @@
 
 Projet de Machine Learning supervisée visant à prédire le défaut de paiement d'un emprunteur (variable binaire `default`) à partir de ses caractéristiques financières.
 
-Réalisé dans le cadre du **DU Data Analytics - PS1**.
+Réalisé dans le cadre du **SDA Data Analytics 25/26**.
 
-Ce projet couvre l'intégralité d'un cycle MLOps : de l'analyse exploratoire du dataset, à l'entraînement et au suivi des modèles avec MLflow, à l'exposition du modèle retenu via une API FastAPI, jusqu'au déploiement automatisé sur Docker Hub via GitHub Actions.
+Ce projet couvre l'intégralité d'un cycle MLOps : de l'analyse exploratoire du dataset, à l'entraînement et au suivi des modèles avec MLflow, à l'exposition du modèle retenu via une API FastAPI, jusqu'au déploiement automatisé sur Docker Hub et AWS via GitHub Actions.
 
+---
+
+## 🚀 Aperçu du Projet
+
+* **Modèle** : XGBoost (optimisé via GridSearchCV & MLflow).
+* **Backend** : FastAPI (Inférence temps réel).
+* **Frontend** : Streamlit (Interface utilisateur interactive).
+* **Conteneurisation** : Docker (Image multi-services).
+* **CI/CD** : GitHub Actions (Linting, Tests, Push Docker Hub).
+* **Cloud** : AWS ECS (Fargate) + Application Load Balancer (ALB).
 ---
 
 ## Sommaire
@@ -24,7 +34,8 @@ Ce projet couvre l'intégralité d'un cycle MLOps : de l'analyse exploratoire du
 12. [Pipeline CI/CD GitHub Actions](#pipeline-cicd-github-actions)
 13. [Déploiement complet pas à pas](#déploiement-complet-pas-à-pas)
 14. [Problèmes identifiés et corrections](#problèmes-identifiés-et-corrections)
-15. [Prérequis et exécution](#prérequis-et-exécution)
+15. [Déploiement Cloud sur AWS](#ECS-Fargate)
+16. [Prérequis et exécution](#prérequis-et-exécution)
 
 ---
 
@@ -669,6 +680,6 @@ docker run -p 8000:8000 -p 8501:8501 projetmlops-api
 
 ---
 
-## Auteur
+## Auteurs
 
-Projet réalisé dans le cadre du DU Data Analytics - PS1 (MLOps).
+GUEDRI Oussama - DRUI Bernard - BANAIAS Patrice

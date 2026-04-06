@@ -1,0 +1,16 @@
+# Dépendances runtime de l'API FastAPI + Frontend Streamlit
+fastapi>=0.100
+uvicorn[standard]>=0.23
+pydantic>=2.0
+
+# ML / Modèle
+# Note : MLflow n'est PAS inclus — le modèle est chargé via joblib
+# depuis un fichier pickle autonome (app/model.pkl)
+joblib>=1.3
+scikit-learn>=1.2
+xgboost>=1.7
+numpy>=1.23
+
+# Frontend Streamlit (intégré à l'image Docker)
+streamlit>=1.30
+requests>=2.31

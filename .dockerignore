@@ -1,0 +1,58 @@
+# Environnements Python
+.venv/
+venv/
+env/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.pytest_cache/
+.mypy_cache/
+
+# Notebooks et documents (pas nécessaires dans l'image)
+*.ipynb
+.ipynb_checkpoints/
+*.docx
+*.pdf
+*.md
+!README.md
+
+# Fichiers de dev
+.vscode/
+.idea/
+*.swp
+*.bak
+
+# Git
+.git/
+.gitignore
+.github/
+
+# Données brutes (pas nécessaires pour servir le modèle)
+Loan_Data.csv
+
+# Build / CI
+build/
+dist/
+*.egg-info/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Tests
+tests/
+
+# MLflow - totalement exclu de l'image
+# Le modèle est chargé depuis app/model.pkl (export via export_model.py)
+# plus besoin de mlruns/ ni de la librairie mlflow dans l'image
+mlruns/
+
+# Scripts de dev (hors image)
+export_model.py
+build_*.py
+reorganize*.py
+
+# Streamlit est inclus dans l'image Docker (intégré à FastAPI)
+# Seul app/requirements_app.txt reste exclu (remplacé par requirements.txt)
+app/requirements_app.txt

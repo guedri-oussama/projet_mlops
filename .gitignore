@@ -1,0 +1,86 @@
+# ============================================================
+# Stratégie : ne pusher QUE le nécessaire pour Docker + CI/CD
+# ============================================================
+
+# Environnements Python
+.venv/
+venv/
+env/
+ENV/
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+
+# Caches et outils de dev
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+.tox/
+*.egg-info/
+build/
+dist/
+
+# MLflow - tracking local (exclus du repo)
+mlruns/
+mlflow.db
+
+# Notebooks Jupyter et données d'entraînement (hors scope Docker)
+*.ipynb
+.ipynb_checkpoints/
+Loan_Data.csv
+
+# Scripts de dev ponctuels (non nécessaires pour Docker)
+export_model.py
+build_*.py
+reorganize*.py
+add_*.py
+extend_doc.py
+fix_accents.py
+
+# Streamlit est désormais inclus dans l'image Docker (intégré à FastAPI)
+# app/streamlit_app.py est versionné
+
+# Ancien requirements local de l'app (remplacé par requirements.txt à la racine)
+app/requirements_app.txt
+
+# Documentation (docx, pdf) - garder uniquement README.md
+*.docx
+*.pdf
+# Autres markdowns (guides pédagogiques) exclus
+GUIDE_MLFLOW.md
+
+# IDE et éditeurs
+.vscode/
+.idea/
+*.swp
+*.swo
+*.bak
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Logs et fichiers temporaires
+*.log
+logs/
+tmp/
+temp/
+
+# Secrets
+.env
+.env.local
+*.pem
+*.key
+secrets/
+
+# Configuration locale Claude Code
+.claude/
+
+# Dossier "Modèle retenu" (doublon du modèle - le vrai est app/model.pkl)
+Modèle retenu/
+Modele retenu/

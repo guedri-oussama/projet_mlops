@@ -15,7 +15,7 @@ Ce projet couvre l'intégralité d'un cycle MLOps : de l'analyse exploratoire du
 * **Frontend** : Streamlit (Interface utilisateur interactive).
 * **Conteneurisation** : Docker (Image multi-services).
 * **CI/CD** : GitHub Actions (Linting, Tests, Push Docker Hub).
-* **Cloud** : AWS ECS (Fargate) + Application Load Balancer (ALB).
+* **Cloud** : Amazon AWS ECS (Fargate) + Application Load Balancer (ALB).
 ---
 
 ## Sommaire

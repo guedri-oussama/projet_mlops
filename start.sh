@@ -21,6 +21,7 @@ cleanup() {
     exit 0
 }
 trap cleanup SIGTERM SIGINT
+
 # 1. Démarrage de FastAPI
 echo "[start.sh] Démarrage de FastAPI sur le port 8000..."
 uvicorn app.main:app --host 0.0.0.0 --port 8000 &
@@ -45,6 +46,7 @@ streamlit run app/streamlit_app.py \
     --server.enableCORS false \
     --server.enableXsrfProtection false \
     --server.enableWebsocketCompression false \
+    --server.fileWatcherType none \
     --browser.gatherUsageStats false &
 STREAMLIT_PID=$!
 

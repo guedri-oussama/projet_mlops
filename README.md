@@ -2,8 +2,6 @@
 
 Projet de Machine Learning supervisée visant à prédire le défaut de paiement d'un emprunteur (variable binaire `default`) à partir de ses caractéristiques financières.
 
-Réalisé dans le cadre du **SDA Data Analytics 25/26**.
-
 Ce projet couvre l'intégralité d'un cycle MLOps : de l'analyse exploratoire du dataset, à l'entraînement et au suivi des modèles avec MLflow, à l'exposition du modèle retenu via une API FastAPI, jusqu'au déploiement automatisé sur Docker Hub et AWS via GitHub Actions.
 
 ---
